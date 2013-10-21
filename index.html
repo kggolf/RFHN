@@ -423,10 +423,10 @@
 							$('#btn-reset').on('click',function(){
 								localStorage.removeItem('distance_total');
 								localStorage.removeItem('time_all');
-								$('#timeall').html(millisectime(timeall));
-								$('#timeall').html("");
-								$('#distancetotal_block3').html(distancetotal_x + ' m');
-								$('#distancetotal_block3').html("");
+								//$('#timeall').html(millisectime(timeall));
+								$('#timeall').html("00:00:00");
+								//$('#distancetotal_block3').html(distancetotal_x + ' m');
+								$('#distancetotal_block3').html("0 m");
 								timeall = 0;
 								distancetotal_x = 0;
 							});
@@ -637,7 +637,7 @@
 					<br><br>
 						<h1><center>Total Distance</center></h1>						
 						<h1><center id="distancetotal_block3"></h1>
-
+							
 						</center>
 						<br><br><br>
 						<center><button type="button" id="btn-reset" class="btn-danger" style=" width:150px;height:100px;"><img src="images/button_reset.png"></button></center>
