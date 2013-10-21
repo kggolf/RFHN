@@ -90,8 +90,8 @@
 							</tr>	
 						</table>					
 						<center>
-							<button type="submit" id="btn-start-pause" class="buttonstart btn-success" style=" width:135px;height:75px;"><img src="images/button_play.png"></button>
-							<button type="submit" id="btn-stop" class="buttonstop btn-inverse" style=" width:135px;height:75px;"><img src="images/button_stop.png"></button>
+							<button type="submit" id="btn-start-pause" class="buttonstart btn-success" style=" width:150px;height:100px;"><img src="images/button_play.png"></button>
+							<button type="submit" id="btn-stop" class="buttonstop btn-inverse" style=" width:150px;height:100px;"><img src="images/button_stop.png"></button>
 						</center>
 						<script src="./js/bootstrap.js"></script>		
 						<script language="javascript">
@@ -399,7 +399,7 @@
 
 								for(var i = 0; i < lap_array.length;i++)
 										{
-										buildstring = '<table border="0" align="CENTER" width="600px"><tr><td width="200px"><h1 style="font-size:30px;color:FF3333" align="CENTER">' + (i+1) + 
+										buildstring = '<table border="0" align="CENTER" width="600px"><tr><td width="200px"><h1 style="font-size:30px;" align="CENTER">' + (i+1) + 
 													'</h1></td><td width="200px"><h1 style="font-size:30px" align="CENTER">' + dis_array[i] + ' m</h1></td>' + 
 													'<td width="200px"><h1 style="font-size:30px" align="CENTER">' + lap_array[i] +'</h1></td></tr></table>' + buildstring ;
 										}
@@ -407,7 +407,7 @@
 							best();	
 							var topfive = "";
 							for (var i = 0; i < time.length; i++){
-										topfive = '<table border="0" align="CENTER" width="600px"><tr><td width="200px"><h1 style="font-size:30px;color:FF3333" align="CENTER">' + (i+1) + 
+										topfive = '<table border="0" align="CENTER" width="600px"><tr><td width="200px"><h1 style="font-size:30px;" align="CENTER">' + (i+1) + 
 													'</h1></td><td width="200px"><h1 style="font-size:30px" align="CENTER">' + dis_arraytop[i] + ' m</h1></td>' + 
 													'<td width="200px"><h1 style="font-size:30px" align="CENTER">' + lap_arraytop[i] +'</h1></td></tr></table>' + topfive ;
 							
@@ -504,7 +504,7 @@
 									var buildstring = "";
 										for(var i = 0; i < lap_array.length;i++)
 										{
-										buildstring = '<table border="0" align="CENTER" width="600px"><tr><td width="200px"><h1 style="font-size:30px;color:FF3333" align="CENTER">' + (i+1) + 
+										buildstring = '<table border="0" align="CENTER" width="600px"><tr><td width="200px"><h1 style="font-size:30px;" align="CENTER">' + (i+1) + 
 													'</h1></td><td width="200px"><h1 style="font-size:30px" align="CENTER">' + dis_array[i] + ' m</h1></td>' + 
 													'<td width="200px"><h1 style="font-size:30px" align="CENTER">' + lap_array[i] +'</h1></td></tr></table>' + buildstring ;
 										}
@@ -532,7 +532,7 @@
 									best();
 									var topfive = "";
 									for (var i = 0; i < time.length; i++){
-										topfive = '<table border="0" align="CENTER" width="600px"><tr><td width="200px"><h1 style="font-size:30px;color:FF3333" align="CENTER">' + (i+1) + 
+										topfive = '<table border="0" align="CENTER" width="600px"><tr><td width="200px"><h1 style="font-size:30px;" align="CENTER">' + (i+1) + 
 													'</h1></td><td width="200px"><h1 style="font-size:30px" align="CENTER">' + dis_arraytop[i] + ' m</h1></td>' + 
 													'<td width="200px"><h1 style="font-size:30px" align="CENTER">' + lap_arraytop[i] +'</h1></td></tr></table>' + topfive ;
 							
@@ -601,9 +601,9 @@
 						<h1><center>History</center></h1>
 						<table border="0" align="CENTER" width="600px">
 						<tr>
-							<td width="200px"><h1 style="font-size:25px;color:FF3333" align = "center">Number</h1></td>
-							<td width="200px"><h1 style="font-size:25px;color:FF3333" align = "center">Distance</h1></td>
-							<td width="200px"><h1 style="font-size:25px;color:FF3333" align = "center">Time</h1></td>
+							<td width="200px"><h2 style="font-size:25px;color:F85151" align = "center">Number</h2></td>
+							<td width="200px"><h2 style="font-size:25px;color:F85151" align = "center">Distance</h2></td>
+							<td width="200px"><h2 style="font-size:25px;color:F85151" align = "center">Time</h2></td>
 						</tr>
 						</table>
 						<center id="mytime2"></center>
@@ -665,16 +665,15 @@
 						
 						<table border="0" align="CENTER" width="600px">
 						<tr>
-							<td width="200px"><h1 style="font-size:25px;color:FF3333" align = "center">Ranking</h1></td>
-							<td width="200px"><h1 style="font-size:25px;color:FF3333" align = "center">Distance</h1></td>
-							<td width="200px"><h1 style="font-size:25px;color:FF3333" align = "center">Time</h1></td>
+							<td width="200px"><h2 style="font-size:25px;color:F85151" align = "center">Ranking</h2></td>
+							<td width="200px"><h2 style="font-size:25px;color:F85151" align = "center">Distance</h2></td>
+							<td width="200px"><h2 style="font-size:25px;color:F85151" align = "center">Time</h2></td>
 						</tr>
 						</table>
 						
 						<h1><center id="topbest5"></center></h1>
-						<!--<h1><center id="t"></center></h1>-->
 						<br><br>
-						<center><button type="button" id="btn-update" class="btn-success" style=" width:150px;height:100px;" ><img src="images/button_update.png"></button></div>
+						<center><button type="button" id="btn-update" class="btn-inverse" style=" width:150px;height:100px;" ><img src="images/button_update.png"></button></div>
 						
 					<div data-role="footer" data-position="fixed" class="nav-glyphish-example">
 						<div data-role="navbar" class="nav-glyphish-example" data-grid="c">
