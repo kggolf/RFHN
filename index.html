@@ -158,7 +158,7 @@ var objPolylines=[];
 						
 //////////////////////////////////
 function initialize(position) { 
-
+	if(end == 0){ 
     GGM=new Object(google.maps);
     var my_Latlng  = new GGM.LatLng(position.coords.latitude,position.coords.longitude);  
     var my_mapTypeId=GGM.MapTypeId.ROADMAP; 
@@ -176,7 +176,7 @@ function initialize(position) {
         draggable:false, 
     });  
     
-      if(end == 0){ 
+      
     GGM.event.addListener(map, "bounds_changed", function() {  
         var my_Point = my_Marker.getPosition(my_Latlng);  
         arr_path.push(my_Point);
