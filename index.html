@@ -264,7 +264,7 @@ function initialize(position) {
 							
 							clearMapPolylines=function(){  
 								arr_path=[];      
-							for(i=0;i<objPolylines.length;i++){
+							for(var i=0;i<objPolylines.length;i++){
 								objPolylines[i].setMap(null);  
 							}  
 							}
@@ -533,10 +533,9 @@ function initialize(position) {
 									//visibleMap = null;
 									//hiddenMap = null;
 									arr_path=[];
-									for(i=0;i<objPolylines.length;i++){
+									for(var i=0;i<objPolylines.length;i++){
 										objPolylines[i].setMap(null);  
 									}  
-									objPolylines=[]; 
 									clearMapPolylines();
 
 									///////////////////////
