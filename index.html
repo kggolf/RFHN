@@ -1,59 +1,694 @@
-<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name=viewport content="user-scalable=no,width=device-width" />
-        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
-        <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-        <script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
-    </head>
-    <body>
-        <div data-role=page id=home>
-            <div data-role=header data-theme="b"><h1>พิกัด GPS</h1></div>
- 
-            <div data-role=content>
-                <span> สถานะ : </span> <span id=state></span> <br />
-                <span> เวลา : </span> <span id=time></span> <br />
-                <span> Latitude : </span> <span id=lat></span> <br />
-                <span> Longitude : </span> <span id=lng></span> <br />
-            </div>
-            <div align="center">
-                <input data-theme="c" type="button" name="btn_start" value="Start" id="btn_start" data-inline="true" data-icon="check">
-                <input data-theme="e" type="button" name="btn_stop" value="Stop" id="btn_stop" data-inline="true" data-icon="delete">
-            </div>
-            <div align="center">
-                <div id="out_put" style="width:99%; height:300px; overflow:scroll; border:1px solid #000;"></div>
-            </div>
-            <br>
-             <div data-role=footer data-theme="b" data-position="fixed"><h4>By Android4Health</h4></div>
-        </div>
-    </body>
+	<head>
+	  <meta charset="utf-8" />
+
+		<meta name="description" content="">
+		<meta name="HandheldFriendly" content="True">
+		<meta name="MobileOptimized" content="320">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="cleartype" content="on">
+			<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />		
+			<link href="./css/bootstrap.css" rel="stylesheet">
+			<link href="./css/bootstrap-responsive.css" rel="stylesheet">
+			<!--<link href="./css/buttoncss.css" rel="stylesheet">-->
+			<link rel="stylesheet" href="./css/app.css">
+
+
+			<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+			<script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+
+		<style type="text/css">
+		
+						html {height:100%}
+						body {height:100%; margin:0; padding:0}
+						#map_canvas {height:100%; width:100%}
+						
+						#bg {
+									background-image:url('images/BG.jpg');
+									background-size:800px 1200px;
+									background-repeat:repeat;
+								 }
+						#running {
+									background-image:url('images/BG.jpg');
+									background-size:800px 1200px;
+									background-repeat:repeat;
+								 }
+						#route {
+									background-image:url('images/BG.jpg');
+									background-size:800px 1200px;
+									background-repeat:repeat;
+								 }
+						#friend {
+									background-image:url('images/BG.jpg');
+									background-size:800px 1200px;
+									background-repeat:repeat;
+								 }
+						#history {
+									background-image:url('images/BG.jpg');
+									background-size:800px 1200px;
+									background-repeat:repeat;
+								 }
+						#total {
+									background-image:url('images/BG.jpg');
+									background-size:800px 1200px;
+									background-repeat:repeat;
+								 }
+						#top5{
+									background-image:url('images/BG.jpg');
+									background-size:800px 1200px;
+									background-repeat:repeat;
+								 }
+						h1{
+									color:white;
+						}
+   				
+		</style>
+	</head>
+
+	<body background="BG.jpg" style="overflow:hidden" id="bg">
+		
+		<div data-role="page" id="running">
+		
+					<div data-role="header">
+						<h1>Exercise Healthy</h1>
+					</div>	
+						<script type="text/javascript" charset="utf-8" src="cordova-2.5.0.js"></script>
+						<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+					
+						<table border="0" cellspacing="0" cellpadding="0" align="CENTER"  >
+
+							<tr>
+								<td colspan="2" width="398" height="300">
+									<div id="map_canvas" align="center"></div>
+									<!--<img id="map1"/>
+									<img id="map2"/>-->
+								</td>
+							</tr>						
+							<tr id="tr">
+								<td width="25px" height="5px" align="CENTER" color="white">
+									<h1 style="font-size:20px; color:white;"> Distance</h1> <h1 id="distance" style="font-size:20px; color:white;"> 0 m</h1>
+
+								</td>
+								<td width="25px" height="5px" align="CENTER" color="white">
+									<h1 style="font-size:20px; color:white;">Time</h1> <h1 id="timer" style="font-size:20px; color:white;">00:00:00</h1>
+								</td>
+							</tr>	
+						</table>					
+						<center>
+							<button type="submit" id="btn-start-pause" class="buttonstart btn-success" style=" width:135px;height:75px;"><img src="images/button_play.png"></button>
+							<button type="submit" id="btn-stop" class="buttonstop btn-inverse" style=" width:135px;height:75px;"><img src="images/button_stop.png"></button>
+						</center>
+						<script src="./js/bootstrap.js"></script>		
+						<script language="javascript">
+						var timeuse = 0;
+						var timealluse = 0;
+						var timeinterval = 0;
+						var timeall = 0;
+						var end = 0;
+						var distancetotal_x = 0;
+						var distance_log = 0;
+						var distance_log1 = 0;
+						var tmp = 0;
+						var tmp1 = 0;
+						var lap_array = new Array();
+						var dis_array = new Array();
+						var lap_arraytop = new Array();
+						var dis_arraytop = new Array();
+						var time = new Array(5);
+						var path = [];
+						var src = "";
+						//var visibleMap = map1;
+						//var hiddenMap = map2;
+						var Globals = {
+							totalDistance: 0,
+							latestDistance: 0,
+							latestTime: 0,
+							cntUpdates: 0,
+							startTime: Date.now(),
+							latestDistanceTime: 0
+						};
+						var distanceElement = document.getElementById('distance');
+						var latestPosition;
+						var lastDistanceTimeTemp = 0;
+						var R = 6371; // km
+						var toRad = Math.PI / 180;
+
+						function millisectotime(mill)
+						{
+							var hour = Math.floor(timeinterval/36000);
+							var min = Math.floor(timeinterval/600)%60;
+							var sec = Math.floor(timeinterval/10)%60;
+
+							if (hour < 10) hour = "0" + hour;
+							if (min < 10) min = "0" + min;
+							if (sec < 10) sec = "0" + sec;
+							return (hour + ":" + min + ":" + sec  );
+
+
+						}
+
+						function TimerOK()
+						{	
+							timeinterval = timeinterval + 1;
+							$('#timer').html(millisectotime(timeinterval));
+							localStorage.setItem('timer_current',timeinterval);
+							localStorage.setItem('timer_history',JSON.stringify(lap_array));
+							localStorage.setItem('timer_historytop',JSON.stringify(lap_arraytop));
+
+
+							if(timeuse == 1)
+							{
+								setTimeout('TimerOK()', 100);
+							}
+						}
+
+						function millisectime(mills)
+						{
+							var hour = Math.floor(timeall/36000);
+							var min = Math.floor(timeall/600)%60;
+							var sec = Math.floor(timeall/10)%60;
+
+							if (hour < 10) hour = "0" + hour;
+							if (min < 10) min = "0" + min;
+							if (sec < 10) sec = "0" + sec;
+
+							return (hour + ":" + min + ":" + sec);
+						}
+
+						function ResetTime()
+						{	
+							timeuse = 0;
+							timeinterval = 0;
+							$('#timer').html(millisectotime(timeinterval));
+						}
+
+						function Timeall()
+						{
+							timeall = timeall + timeinterval;
+							$('#timeall').html(millisectime(timeall));
+							localStorage.setItem('time_all',timeall);
+							if(timealluse == 0)
+							{
+								setTimeout('Timeall()', 100);
+							}
+						}
+						function Distancetotal()
+						{
+							distancetotal_x = distancetotal_x + distance_log;
+							$('#distancetotal_block3').html(distancetotal_x + ' m');
+							localStorage.setItem('distance_total',distancetotal_x);						
+						}
+
+						function best(){
+
+						for(var i=0;i<dis_arraytop.length;i++){
+							for(var j=1;j<(dis_arraytop.length-i);j++){
+								if(dis_arraytop[j-1] < dis_arraytop[j]){
+									tmp = dis_arraytop[j];
+									dis_arraytop[j] = dis_arraytop[j-1];
+									dis_arraytop[j-1] = tmp;
+
+									tmp1 = lap_arraytop[j];
+									lap_arraytop[j] = lap_arraytop[j-1];
+									lap_arraytop[j-1] = tmp1;
+
+
+								}
+								if(dis_arraytop[j-1] == dis_arraytop[j] && lap_arraytop[j-1] > lap_arraytop[j]){
+									tmp = dis_arraytop[j];
+									dis_arraytop[j] = dis_arraytop[j-1];
+									dis_arraytop[j-1] = tmp;
+
+									tmp1 = lap_arraytop[j];
+									lap_arraytop[j] = lap_arraytop[j-1];
+									lap_arraytop[j-1] = tmp1;	
+								}
+									
+							}
+					
+						}
+
+						}
+						
+						
+						function Mapdis(){
+        //var options = { timeout: Infinity };
+        //var watchID = navigator.geolocation.watchPosition(initialize, onError, options);
+
+var map; // ˹Ե҇ἃ map 利թҹڍѧ¬ˑ٠࿗鎣̩˒öᄕ¡㫩Ȓ٠ɒ釹Η躤թ  
+var GGM; // ˹Ե҇ἃ GGM 利ࢧڠgoogle.maps Object ɐ䵩ᄕ¡㫩ȒڤթȨӂÖ鹠 
+var arr_path=[]; // ˹Ե҇ἃ˓̃Ѻࢧڤ铍ӠĂ젵ԡ˹觠path  
+var makePolyline; // ˹Ե҇ἃ ࠑǡ쫑蹠˃꒧ዩ٠polylines  
+var objPolylines=[]; // ˹Ե҇ἃ˓̃Ѻࢧڤ钠object ÍǠpolylines  
+
+////////////////////////////////////
+			if (!navigator.geolocation) {
+					alert("Geolocation is not supported by your browser");
+					return;
+			}
+									
+			navigator.geolocation.watchPosition(initialize, onError, {
+			enableHighAccuracy: true,
+			timeout: Infinity,
+			maximumAge: 10000 //10000
+			});			
+						
+//////////////////////////////////
+function initialize(position) { 
+    GGM=new Object(google.maps);
+    var my_Latlng  = new GGM.LatLng(position.coords.latitude,position.coords.longitude);  
+    var my_mapTypeId=GGM.MapTypeId.ROADMAP; 
+    var my_DivObj=$("#map_canvas")[0];   
+    var myOptions = {  
+        zoom: 16, 
+        center: my_Latlng , 
+        mapTypeId:my_mapTypeId 
+    };  
+    map = new GGM.Map(my_DivObj,myOptions);
+      
+     var my_Marker = new GGM.Marker({ 
+        position: my_Latlng,  
+        map: map,  
+        draggable:false, 
+    });  
+    
+      
+    GGM.event.addListener(map, "bounds_changed", function() {  
+        var my_Point = my_Marker.getPosition(my_Latlng);  
+        arr_path.push(my_Point);
+        map.panTo(my_Point);
+        if(end == 0){     
+        makePolyline(arr_path);
+		}
+    });
+	
+								if (latestPosition &&
+									position.coords.latitude === latestPosition.coords.latitude &&
+									position.coords.longitude === latestPosition.coords.longitude) {
+									return;
+								}
+
+								latestPosition = position;
+								path.push(latestPosition.coords);
+								
+								if(end == 0){
+									Globals.cntUpdates++;
+								}
+								// calculate total distance
+								if (Globals.cntUpdates > 1) {
+									Globals.latestDistance = distance(path[Globals.cntUpdates - 1], path[Globals.cntUpdates - 2]);
+									Globals.totalDistance += Globals.latestDistance;
+								}
+								
+
+								if (this.totalDistance > 1) {
+								var totalDistanceString;
+									totalDistanceString = Math.round(Globals.totalDistance * 1000) / 1000 + " km";
+									distance_log = Math.round((Globals.totalDistance * 1000) / 1000);
+									distance_log1 = Math.round((Globals.totalDistance * 1000) / 1000);
+								}
+								else {
+									totalDistanceString = Math.round(Globals.totalDistance * 1000) + " m";
+									distance_log = Math.round(Globals.totalDistance * 1000);
+									distance_log1 = Math.round(Globals.totalDistance * 1000);
+								}
+
+								distanceElement.innerHTML = " " + totalDistanceString;				
+								}
+								
+								function distance(pos1, pos2) {
+								var lat1 = pos1.latitude;
+								var lon1 = pos1.longitude;
+								var lat2 = pos2.latitude;
+								var lon2 = pos2.longitude;
+
+								var dLat = (lat2 - lat1) * toRad;
+								var dLon = (lon2 - lon1) * toRad;
+								lat1 = lat1 * toRad;
+								lat2 = lat2 * toRad;
+
+								var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+									Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+								var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+								var d = R * c;
+
+								return d;
+							}
+							localStorage.setItem('distance_current',distance_log);
+							localStorage.setItem('distance_history',JSON.stringify(dis_array));
+							
+							makePolyline=function(arr_path){  
+							var i=arr_path.length-1;  
+							objPolylines[i] = new GGM.Polyline({ 
+								path: arr_path,
+								strokeColor: "#FF0000",
+								strokeOpacity: 1.0, 
+								strokeWeight: 2
+							});   
+							objPolylines[i].setMap(map);    
+							}  
+							
+							clearMapPolylines=function(){  
+								arr_path=[];      
+							for(i=0;i<objPolylines.length;i++){
+								objPolylines[i].setMap(null);  
+							}  
+							}
+}
+function onError(error) {
+        alert('code: '    + error.code    + '\n' +
+              'message: ' + error.message + '\n');
+    }
+
+						// ----------------------------------------------------
+
+						$(document).ready(function() { // On page load completed do it function.
+							var status = 0;
+							var btntoggle = 0;
+							var btntoggles  =0;
+
+							if(localStorage.getItem('timer_history') && localStorage.getItem('timer_current') && localStorage.getItem('timer_historytop')){
+								lap_array = JSON.parse(localStorage.getItem('timer_history'));
+								lap_arraytop = JSON.parse(localStorage.getItem('timer_historytop'));
+								timeinterval = parseInt(localStorage.getItem('timer_current'));
+							}
+
+							//if(localStorage.getItem('distance_history') && localStorage.getItem('distance_current')){
+							if(localStorage.getItem('distance_history'))
+							{
+								dis_array = JSON.parse(localStorage.getItem('distance_history'));
+								//dis_arraytop = JSON.parse(localStorage.getItem('distance_top'));
+								//distance_log = parseInt(localStorage.getItem('distance_current'));
+							}
+
+							if(localStorage.getItem('distance_top'))
+							{
+								dis_arraytop = JSON.parse(localStorage.getItem('distance_top'));
+							}
+
+							if(localStorage.getItem('distance_total'))
+							{
+								distancetotal_x = parseInt(localStorage.getItem('distance_total'));
+							}
+
+							if(localStorage.getItem('time_all'))
+							{
+									timeall = parseInt(localStorage.getItem('time_all'));
+							}		
+							var buildstring = "";
+
+								for(var i = 0; i < lap_array.length;i++)
+										{
+										buildstring = '<table border="0" align="CENTER" width="600px"><tr><td width="200px"><h1 style="font-size:30px;color:FF3333" align="CENTER">' + (i+1) + 
+													'</h1></td><td width="200px"><h1 style="font-size:30px" align="CENTER">' + dis_array[i] + ' m</h1></td>' + 
+													'<td width="200px"><h1 style="font-size:30px" align="CENTER">' + lap_array[i] +'</h1></td></tr></table>' + buildstring ;
+										}
+								
+							best();	
+							var topfive = "";
+							for (var i = 0; i < time.length; i++){
+										topfive = '<table border="0" align="CENTER" width="600px"><tr><td width="200px"><h1 style="font-size:30px;color:FF3333" align="CENTER">' + (i+1) + 
+													'</h1></td><td width="200px"><h1 style="font-size:30px" align="CENTER">' + dis_arraytop[i] + ' m</h1></td>' + 
+													'<td width="200px"><h1 style="font-size:30px" align="CENTER">' + lap_arraytop[i] +'</h1></td></tr></table>' + topfive ;
+							
+										$('#topbest5').html(topfive);
+									}
+
+							$('#distancetotal_block3').html(distancetotal_x + ' m');							
+							$('#timeall').html(millisectime(timeall));
+							$('#distance').html(distance_log + ' m');
+							$('#mytime2').html(buildstring);
+							$('#timer').html(millisectotime(timeinterval));
+
+							$('#btn-reset').on('click',function(){
+								localStorage.removeItem('distance_total');
+								localStorage.removeItem('time_all');
+								$('#timeall').html(millisectime(timeall));
+								$('#timeall').html("");
+								$('#distancetotal_block3').html(distancetotal_x + ' m');
+								$('#distancetotal_block3').html("");
+								timeall = 0;
+								distancetotal_x = 0;
+							});
+						
+						
+							$('#btn-delall').on('click',function(){
+								localStorage.removeItem('timer_current');
+								localStorage.removeItem('timer_history');
+								timeinterval = 0;
+								$('#timer').html(millisectotime(timeinterval));
+								$('#mytime').html("");
+								$('#mytime2').html("");
+									lap_array.length = 0;
+									dis_array.length = 0;
+									lap_arraytop.length = 0;
+									dis_arraytop.length = 0;
+									distancetotal_x = 0;
+									timeall = 0;
+							});
+
+							
+							$('#btn-start-pause').on('click',function(){
+								if (btntoggle == 0)
+								//{
+									$('#btn-start-pause').removeClass("btn-success");
+									$('#btn-start-pause').addClass("btn-inverse");
+									$('#btn-stop').removeClass("btn-inverse");
+									$('#btn-stop').addClass("btn-danger");
+								
+
+									//Map();
+									timeuse = 1;
+									TimerOK();
+									Mapdis();
+									btntoggle = 1;
+									end = 0;
+
+
+								//}
+								/*else
+								{
+									$('#btn-start-pause').removeClass("btn-inverse");
+									$('#btn-start-pause').addClass("btn-success");
+									$('#btn-start-pause').html('Start');
+									timeuse = 0;
+									btntoggle =0;
+								}*/
+								
+							});	
+							
+
+
+							$('#btn-stop').on('click',function(){	
+
+									$('#btn-start-pause').removeClass("btn-inverse");
+									$('#btn-start-pause').addClass("btn-success");
+									$('#btn-stop').removeClass("btn-danger");
+									$('#btn-stop').addClass("btn-inverse");
+									
+									$('#distance').html('0 m');
+
+									Timeall();
+
+									Distancetotal();									
+									timealluse = 1;
+									timeuse = 0;
+									btntoggle = 0;
+									end =1;
+									dis_array.push(distance_log);
+									dis_arraytop.push(distance_log1);
+									lap_array.push(millisectotime(timeinterval));
+									lap_arraytop.push(millisectotime(timeinterval));
+									localStorage.setItem('distance_history',JSON.stringify(dis_array));
+									localStorage.setItem('distance_top',JSON.stringify(dis_arraytop));
+
+									var buildstring = "";
+										for(var i = 0; i < lap_array.length;i++)
+										{
+										buildstring = '<table border="0" align="CENTER" width="600px"><tr><td width="200px"><h1 style="font-size:30px;color:FF3333" align="CENTER">' + (i+1) + 
+													'</h1></td><td width="200px"><h1 style="font-size:30px" align="CENTER">' + dis_array[i] + ' m</h1></td>' + 
+													'<td width="200px"><h1 style="font-size:30px" align="CENTER">' + lap_array[i] +'</h1></td></tr></table>' + buildstring ;
+										}
+
+									$('#mytime2').html(buildstring);
+
+									ResetTime();
+
+
+									//////////////////////
+									path = [];
+									Globals.cntUpdates = 0;
+									Globals.totalDistance = 0;
+									update(latestPosition)
+									src = null;
+									visibleMap = null;
+									hiddenMap = null;
+
+									///////////////////////
+									best();
+
+							});	
+							
+							$('#btn-update').on('click',function(){	
+									best();
+									var topfive = "";
+									for (var i = 0; i < time.length; i++){
+										topfive = '<table border="0" align="CENTER" width="600px"><tr><td width="200px"><h1 style="font-size:30px;color:FF3333" align="CENTER">' + (i+1) + 
+													'</h1></td><td width="200px"><h1 style="font-size:30px" align="CENTER">' + dis_arraytop[i] + ' m</h1></td>' + 
+													'<td width="200px"><h1 style="font-size:30px" align="CENTER">' + lap_arraytop[i] +'</h1></td></tr></table>' + topfive ;
+							
+										$('#topbest5').html(topfive);
+									}
+							});	
+						
+						});
+
+</script>	
+					<div data-role="footer" data-position="fixed" class="nav-glyphish-example">						
+						<div data-role="navbar" class="nav-glyphish-example" data-grid="c">
+							<ul>
+								<li><a href="#running" id="brunning" ><img src="images/run.png" width="30px" height="30px"><br>Running</a></li>
+								<li><a href="#route" id="broute"><img src="images/route.png" width="30px" height="30px"><br>Route</a></li>
+								<li><a href="#friend" id="bfriend" ><img src="images/friend.png" width="30px" height="30px"><br>Friend</a></li>
+								<li><a href="#history" id="bhistory" ><img src="images/history.png" width="30px" height="30px"><br>History</a></li>
+							</ul>
+						</div>
+					</div>		
+		</div>			
+		
+		<div data-role="page" id="route">
+					<div data-role="header">
+						<h1>Exercise Healthy</h1>
+					</div>
+		2
+
+					<div data-role="footer" data-position="fixed" class="nav-glyphish-example">
+						<div data-role="navbar" class="nav-glyphish-example" data-grid="c">
+							<ul>
+								<li><a href="#running" id="brunning" ><img src="images/run.png" width="30px" height="30px"><br>Running</a></li>
+								<li><a href="#route" id="broute"><img src="images/route.png" width="30px" height="30px"><br>Route</a></li>
+								<li><a href="#friend" id="bfriend" ><img src="images/friend.png" width="30px" height="30px"><br>Friend</a></li>
+								<li><a href="#history" id="bhistory" ><img src="images/history.png" width="30px" height="30px"><br>History</a></li>
+							</ul>
+						</div>
+					</div>	
+		</div>
+
+		<div data-role="page" id="friend">
+					<div data-role="header">
+						<h1>Exercise Healthy</h1>
+					</div>
+		3
+
+					<div data-role="footer" data-position="fixed" class="nav-glyphish-example">
+						<div data-role="navbar" class="nav-glyphish-example" data-grid="c">
+							<ul>
+								<li><a href="#running" id="brunning" ><img src="images/run.png" width="30px" height="30px"><br>Running</a></li>
+								<li><a href="#route" id="broute"><img src="images/route.png" width="30px" height="30px"><br>Route</a></li>
+								<li><a href="#friend" id="bfriend" ><img src="images/friend.png" width="30px" height="30px"><br>Friend</a></li>
+								<li><a href="#history" id="bhistory" ><img src="images/history.png" width="30px" height="30px"><br>History</a></li>
+							</ul>
+						</div>
+					</div>	
+		</div>
+
+		<div data-role="page" id="history">
+					<div data-role="header">
+						<h1>Exercise Healthy</h1>
+					</div>
+
+
+					<div id="mytimeblock1">
+						<h1><center>History</center></h1>
+						<table border="0" align="CENTER" width="600px">
+						<tr>
+							<td width="200px"><h1 style="font-size:25px;color:FF3333" align = "center">Number</h1></td>
+							<td width="200px"><h1 style="font-size:25px;color:FF3333" align = "center">Distance</h1></td>
+							<td width="200px"><h1 style="font-size:25px;color:FF3333" align = "center">Time</h1></td>
+						</tr>
+						</table>
+						<center id="mytime2"></center>
+						<button type="button" id="btn-delall" class="btn-danger" style="width:100%;height:60px;margin:140% 0% 0% 0%">DELETE ALL DATA</button>
+
+					<div data-role="footer" data-position="fixed" class="nav-glyphish-example">
+						<div data-role="navbar" class="nav-glyphish-example" data-grid="c">
+							<ul>
+								<li><a href="#running" id="brunning" ><img src="images/run.png" width="30px" height="30px"><br>Running</a></li>
+								<li><a href="#total" id="bTotal"><img src="images/total.png" width="30px" height="30px"><br>Total</a></li>
+								<li><a href="#top5" id="btop5" ><img src="images/topfive.png" width="30px" height="30px"><br>Top 5</a></li>
+								<li><a href="#history" id="bhistory" ><img src="images/history.png" width="30px" height="30px"><br>History</a></li>
+							</ul>
+						</div>
+					</div>
+					</div>
+		</div>
+
+		<div data-role="page" id="total">
+					<div data-role="header">
+						<h1>Exercise Healthy</h1>
+					</div>
+
+
+					<div id="mytimeblock2" >
+					<br><br><br>
+						<h1><center>Total Time</center></h1>
+						<h1><center id="timeall"></h1>
+
+						</center>
+					<br><br>
+						<h1><center>Total Distance</center></h1>						
+						<h1><center id="distancetotal_block3"></h1>
+
+						</center>
+						<br><br><br>
+						<center><button type="button" id="btn-reset" class="btn-danger" style=" width:150px;height:100px;"><img src="images/button_reset.png"></button></center>
+					<div data-role="footer" data-position="fixed" class="nav-glyphish-example">
+						<div data-role="navbar" class="nav-glyphish-example" data-grid="c">
+							<ul>
+								<li><a href="#running" id="brunning" ><img src="images/run.png" width="30px" height="30px"><br>Running</a></li>
+								<li><a href="#total" id="bTotal"><img src="images/total.png" width="30px" height="30px"><br>Total</a></li>
+								<li><a href="#top5" id="btop5" ><img src="images/topfive.png" width="30px" height="30px"><br>Top 5</a></li>
+								<li><a href="#history" id="bhistory" ><img src="images/history.png" width="30px" height="30px"><br>History</a></li>
+							</ul>
+						</div>
+					</div>	
+					</div>
+		</div>			
+
+		<div data-role="page" id="top5">
+					<div data-role="header">
+						<h1>Exercise Healthy</h1>
+					</div>
+
+
+					<div id="mytimeblock4" >
+						<h1><center>Top 5</center></h1>
+						
+						<table border="0" align="CENTER" width="600px">
+						<tr>
+							<td width="200px"><h1 style="font-size:25px;color:FF3333" align = "center">Ranking</h1></td>
+							<td width="200px"><h1 style="font-size:25px;color:FF3333" align = "center">Distance</h1></td>
+							<td width="200px"><h1 style="font-size:25px;color:FF3333" align = "center">Time</h1></td>
+						</tr>
+						</table>
+						
+						<h1><center id="topbest5"></center></h1>
+						<!--<h1><center id="t"></center></h1>-->
+						<br><br>
+						<center><button type="button" id="btn-update" class="btn-success" style=" width:150px;height:100px;" ><img src="images/button_update.png"></button></div>
+						
+					<div data-role="footer" data-position="fixed" class="nav-glyphish-example">
+						<div data-role="navbar" class="nav-glyphish-example" data-grid="c">
+							<ul>
+								<li><a href="#running" id="brunning" ><img src="images/run.png" width="30px" height="30px"><br>Running</a></li>
+								<li><a href="#total" id="bTotal"><img src="images/total.png" width="30px" height="30px"><br>Total</a></li>
+								<li><a href="#top5" id="btop5" ><img src="images/topfive.png" width="30px" height="30px"><br>Top 5</a></li>
+								<li><a href="#history" id="bhistory" ><img src="images/history.png" width="30px" height="30px"><br>History</a></li>
+							</ul>
+						</div>
+					</div>	
+					</div>
+		</div>
+
+	</body>
 </html>
- 
-<script>
-    (function($) {
-        var runGPS = 0;
-        $('#btn_start').click(function() {
-            $("#state").text('Running');
-            runGPS = 1;
-        });
-        $('#btn_stop').click(function() {
-            $("#state").text('Paused');
-            runGPS = 0;
-        });
-        var timer = setInterval(function() {
-            if (runGPS == 1) {
-                navigator.geolocation.getCurrentPosition(function(pos)                {
-                    date = new Date();
-                    $("#time").text(date);
-                    var lat = pos.coords.latitude;
-                    var lng = pos.coords.longitude;
-                    $("#lat").text(lat);
-                    $("#lng").text(lng);
-                    var t = date + " lat:" + lat + "lng:" + lng + "<br>";
-                    $("#out_put").append(t);
-                });
-            }
-        }, 1000);
-    })(jQuery);
-</script>
