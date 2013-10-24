@@ -232,7 +232,7 @@
 						
 						
 						function Mapdis(){
-        //var options = { timeout: Infinity };
+        //var options = { timeout: 100000 };
         //var watchID = navigator.geolocation.watchPosition(initialize, onError, options);
 
 var map; // ˹Ե҇ἃ map 利թҹڍѧ¬ˑ٠࿗鎣̩˒öᄕ¡㫩Ȓ٠ɒ釹Η躤թ  
@@ -242,6 +242,7 @@ var makePolyline; // ˹Ե҇ἃ ࠑǡ쫑蹠˃꒧ዩ٠polylines
 var objPolylines=[]; // ˹Ե҇ἃ˓̃Ѻࢧڤ钠object ÍǠpolylines  
 
 ////////////////////////////////////
+//			
 			if (!navigator.geolocation) {
 					alert("Geolocation is not supported by your browser");
 					return;
@@ -250,11 +251,12 @@ var objPolylines=[]; // ˹Ե҇ἃ˓̃Ѻࢧڤ钠object ÍǠpolylines
 			navigator.geolocation.watchPosition(initialize, onError, {
 			enableHighAccuracy: true,
 			timeout: Infinity,
-			maximumAge: 10000 //10000
-			});			
+			maximumAge: 30000 //10000
+			});		
 						
 //////////////////////////////////
 function initialize(position) { 
+
     GGM=new Object(google.maps);
     var my_Latlng  = new GGM.LatLng(position.coords.latitude,position.coords.longitude);  
     var my_mapTypeId=GGM.MapTypeId.ROADMAP; 
@@ -272,14 +274,14 @@ function initialize(position) {
         draggable:false, 
     });  
     
-      
+      if(end == 0){ 
     GGM.event.addListener(map, "bounds_changed", function() {  
         var my_Point = my_Marker.getPosition(my_Latlng);  
         arr_path.push(my_Point);
         map.panTo(my_Point);
-        if(end == 0){     
+            
         makePolyline(arr_path);
-		}
+		
     });
 	
 								if (latestPosition &&
@@ -291,9 +293,9 @@ function initialize(position) {
 								latestPosition = position;
 								path.push(latestPosition.coords);
 								
-								if(end == 0){
+							
 									Globals.cntUpdates++;
-								}
+								
 								// calculate total distance
 								if (Globals.cntUpdates > 1) {
 									Globals.latestDistance = distance(path[Globals.cntUpdates - 1], path[Globals.cntUpdates - 2]);
@@ -313,7 +315,8 @@ function initialize(position) {
 									distance_log1 = Math.round(Globals.totalDistance * 1000);
 								}
 
-								distanceElement.innerHTML = " " + totalDistanceString;				
+								distanceElement.innerHTML = " " + totalDistanceString;		
+								}
 								}
 								
 								function distance(pos1, pos2) {
@@ -343,7 +346,7 @@ function initialize(position) {
 								path: arr_path,
 								strokeColor: "#FF0000",
 								strokeOpacity: 1.0, 
-								strokeWeight: 2
+								strokeWeight: 5
 							});   
 							objPolylines[i].setMap(map);    
 							}  
