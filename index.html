@@ -151,9 +151,9 @@ var objPolylines=[];
 			}
 									
 			navigator.geolocation.watchPosition(initialize, onError, {
-			enableHighAccuracy: false,
+			enableHighAccuracy: true,
 			timeout: Infinity,
-			maximumAge: 30000 //10000
+			maximumAge: 50000 //10000
 			});		
 						
 //////////////////////////////////
@@ -236,17 +236,12 @@ function initialize(position) {
 							objPolylines[i].setMap(map);    
 							}  
 							
-							clearMapPolylines=function(){  
-								arr_path=[];      
-							for(i=0;i<objPolylines.length;i++){
-								objPolylines[i].setMap(null);  
-							}  
-							}
+							
 }
-function onError(error) {
-        alert('code: '    + error.code    + '\n' +
-              'message: ' + error.message + '\n');
-    }
+							function onError(error) {
+								alert('code: '    + error.code    + '\n' +
+								'message: ' + error.message + '\n');
+							}
 	
 							function distance(pos1, pos2) {
 								var lat1 = pos1.latitude;
@@ -265,6 +260,13 @@ function onError(error) {
 								var d = R * c;
 
 								return d;
+							}
+							
+							clearMapPolylines=function(){  
+								arr_path=[];      
+							for(i=0;i<objPolylines.length;i++){
+								objPolylines[i].setMap(null);  
+							}  
 							}
 	
 						function millisectotime(mill)
@@ -523,13 +525,18 @@ function onError(error) {
 
 
 									//////////////////////
-									path = [];
+									//path = [];
 									Globals.cntUpdates = 0;
 									Globals.totalDistance = 0;
 									update(latestPosition)
-									src = null;
-									visibleMap = null;
-									hiddenMap = null;
+									//src = null;
+									//visibleMap = null;
+									//hiddenMap = null;
+									arr_path=[];
+									for(i=0;i<objPolylines.length;i++){
+										objPolylines[i].setMap(null);  
+									}  
+									objPolylines=[]; 
 									clearMapPolylines();
 
 									///////////////////////
