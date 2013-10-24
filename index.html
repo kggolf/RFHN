@@ -78,7 +78,8 @@
 						<table border="0" cellspacing="0" cellpadding="0" align="CENTER"  >
 
 							<tr>
-								<td colspan="2" width="398" height="300">
+								<td colspan="2" width="400" height="510">
+								<br>
 									<div id="map_canvas" align="center"></div>
 									<!--<img id="map1"/>
 									<img id="map2"/>-->
@@ -133,16 +134,18 @@
 						var R = 6371; // km
 						var toRad = Math.PI / 180;
 						
+						var map;
+						var GGM; 
+						var arr_path=[];
+						var makePolyline; 
+						var objPolylines=[]; 
+						
 						
 					function Mapdis(){
         //var options = { timeout: 100000 };
         //var watchID = navigator.geolocation.watchPosition(initialize, onError, options);
 
-var map;
-var GGM; 
-var arr_path=[];
-var makePolyline; 
-var objPolylines=[]; 
+
 
 ////////////////////////////////////
 			if (!navigator.geolocation) {
@@ -538,6 +541,8 @@ function initialize(position) {
 									}  
 									clearMapPolylines();
 
+									arr_path=[];
+									objPolylines=[]; 
 									///////////////////////
 									best();
 
