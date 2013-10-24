@@ -132,7 +132,141 @@
 						var lastDistanceTimeTemp = 0;
 						var R = 6371; // km
 						var toRad = Math.PI / 180;
+						
+						
+					function Mapdis(){
+        //var options = { timeout: 100000 };
+        //var watchID = navigator.geolocation.watchPosition(initialize, onError, options);
 
+var map;
+var GGM; 
+var arr_path=[];
+var makePolyline; 
+var objPolylines=[]; 
+
+////////////////////////////////////
+			if (!navigator.geolocation) {
+					alert("Geolocation is not supported by your browser");
+					return;
+			}
+									
+			navigator.geolocation.watchPosition(initialize, onError, {
+			enableHighAccuracy: false,
+			timeout: Infinity,
+			maximumAge: 30000 //10000
+			});		
+						
+//////////////////////////////////
+function initialize(position) { 
+
+    GGM=new Object(google.maps);
+    var my_Latlng  = new GGM.LatLng(position.coords.latitude,position.coords.longitude);  
+    var my_mapTypeId=GGM.MapTypeId.ROADMAP; 
+    var my_DivObj=$("#map_canvas")[0];   
+    var myOptions = {  
+        zoom: 16, 
+        center: my_Latlng , 
+        mapTypeId:my_mapTypeId 
+    };  
+    map = new GGM.Map(my_DivObj,myOptions);
+      
+     var my_Marker = new GGM.Marker({ 
+        position: my_Latlng,  
+        map: map,  
+        draggable:false, 
+    });  
+    
+      if(end == 0){ 
+    GGM.event.addListener(map, "bounds_changed", function() {  
+        var my_Point = my_Marker.getPosition(my_Latlng);  
+        arr_path.push(my_Point);
+        map.panTo(my_Point);
+            
+        makePolyline(arr_path);
+		
+    });
+	
+								if (latestPosition &&
+									position.coords.latitude === latestPosition.coords.latitude &&
+									position.coords.longitude === latestPosition.coords.longitude) {
+									return;
+								}
+
+								latestPosition = position;
+								path.push(latestPosition.coords);
+								
+							
+									Globals.cntUpdates++;
+								
+								// calculate total distance
+								if (Globals.cntUpdates > 1) {
+									Globals.latestDistance = distance(path[Globals.cntUpdates - 1], path[Globals.cntUpdates - 2]);
+									Globals.totalDistance += Globals.latestDistance;
+								}
+								
+
+								if (this.totalDistance > 1) {
+								var totalDistanceString;
+									totalDistanceString = Math.round(Globals.totalDistance * 1000) / 1000 + " km";
+									distance_log = Math.round((Globals.totalDistance * 1000) / 1000);
+									distance_log1 = Math.round((Globals.totalDistance * 1000) / 1000);
+								}
+								else {
+									totalDistanceString = Math.round(Globals.totalDistance * 1000) + " m";
+									distance_log = Math.round(Globals.totalDistance * 1000);
+									distance_log1 = Math.round(Globals.totalDistance * 1000);
+								}
+
+								distanceElement.innerHTML = " " + totalDistanceString;		
+								}
+								}
+								
+								
+							localStorage.setItem('distance_current',distance_log);
+							localStorage.setItem('distance_history',JSON.stringify(dis_array));
+							
+							makePolyline=function(arr_path){  
+							var i=arr_path.length-1;  
+							objPolylines[i] = new GGM.Polyline({ 
+								path: arr_path,
+								strokeColor: "#FF0000",
+								strokeOpacity: 1.0, 
+								strokeWeight: 5
+							});   
+							objPolylines[i].setMap(map);    
+							}  
+							
+							clearMapPolylines=function(){  
+								arr_path=[];      
+							for(i=0;i<objPolylines.length;i++){
+								objPolylines[i].setMap(null);  
+							}  
+							}
+}
+function onError(error) {
+        alert('code: '    + error.code    + '\n' +
+              'message: ' + error.message + '\n');
+    }
+	
+							function distance(pos1, pos2) {
+								var lat1 = pos1.latitude;
+								var lon1 = pos1.longitude;
+								var lat2 = pos2.latitude;
+								var lon2 = pos2.longitude;
+
+								var dLat = (lat2 - lat1) * toRad;
+								var dLon = (lon2 - lon1) * toRad;
+								lat1 = lat1 * toRad;
+								lat2 = lat2 * toRad;
+
+								var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+									Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+								var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+								var d = R * c;
+
+								return d;
+							}
+	
 						function millisectotime(mill)
 						{
 							var hour = Math.floor(timeinterval/36000);
@@ -231,137 +365,7 @@
 						}
 						
 						
-						function Mapdis(){
-        //var options = { timeout: 100000 };
-        //var watchID = navigator.geolocation.watchPosition(initialize, onError, options);
-
-var map; // ˹Ե҇ἃ map 利թҹڍѧ¬ˑ٠࿗鎣̩˒öᄕ¡㫩Ȓ٠ɒ釹Η躤թ  
-var GGM; // ˹Ե҇ἃ GGM 利ࢧڠgoogle.maps Object ɐ䵩ᄕ¡㫩ȒڤթȨӂÖ鹠 
-var arr_path=[]; // ˹Ե҇ἃ˓̃Ѻࢧڤ铍ӠĂ젵ԡ˹觠path  
-var makePolyline; // ˹Ե҇ἃ ࠑǡ쫑蹠˃꒧ዩ٠polylines  
-var objPolylines=[]; // ˹Ե҇ἃ˓̃Ѻࢧڤ钠object ÍǠpolylines  
-
-////////////////////////////////////
-//			
-			if (!navigator.geolocation) {
-					alert("Geolocation is not supported by your browser");
-					return;
-			}
-									
-			navigator.geolocation.watchPosition(initialize, onError, {
-			enableHighAccuracy: false,
-			timeout: Infinity,
-			maximumAge: 30000 //10000
-			});		
-						
-//////////////////////////////////
-function initialize(position) { 
-
-    GGM=new Object(google.maps);
-    var my_Latlng  = new GGM.LatLng(position.coords.latitude,position.coords.longitude);  
-    var my_mapTypeId=GGM.MapTypeId.ROADMAP; 
-    var my_DivObj=$("#map_canvas")[0];   
-    var myOptions = {  
-        zoom: 16, 
-        center: my_Latlng , 
-        mapTypeId:my_mapTypeId 
-    };  
-    map = new GGM.Map(my_DivObj,myOptions);
-      
-     var my_Marker = new GGM.Marker({ 
-        position: my_Latlng,  
-        map: map,  
-        draggable:false, 
-    });  
-    
-      if(end == 0){ 
-    GGM.event.addListener(map, "bounds_changed", function() {  
-        var my_Point = my_Marker.getPosition(my_Latlng);  
-        arr_path.push(my_Point);
-        map.panTo(my_Point);
-            
-        makePolyline(arr_path);
-		
-    });
 	
-								if (latestPosition &&
-									position.coords.latitude === latestPosition.coords.latitude &&
-									position.coords.longitude === latestPosition.coords.longitude) {
-									return;
-								}
-
-								latestPosition = position;
-								path.push(latestPosition.coords);
-								
-							
-									Globals.cntUpdates++;
-								
-								// calculate total distance
-								if (Globals.cntUpdates > 1) {
-									Globals.latestDistance = distance(path[Globals.cntUpdates - 1], path[Globals.cntUpdates - 2]);
-									Globals.totalDistance += Globals.latestDistance;
-								}
-								
-
-								if (this.totalDistance > 1) {
-								var totalDistanceString;
-									totalDistanceString = Math.round(Globals.totalDistance * 1000) / 1000 + " km";
-									distance_log = Math.round((Globals.totalDistance * 1000) / 1000);
-									distance_log1 = Math.round((Globals.totalDistance * 1000) / 1000);
-								}
-								else {
-									totalDistanceString = Math.round(Globals.totalDistance * 1000) + " m";
-									distance_log = Math.round(Globals.totalDistance * 1000);
-									distance_log1 = Math.round(Globals.totalDistance * 1000);
-								}
-
-								distanceElement.innerHTML = " " + totalDistanceString;		
-								}
-								}
-								
-								function distance(pos1, pos2) {
-								var lat1 = pos1.latitude;
-								var lon1 = pos1.longitude;
-								var lat2 = pos2.latitude;
-								var lon2 = pos2.longitude;
-
-								var dLat = (lat2 - lat1) * toRad;
-								var dLon = (lon2 - lon1) * toRad;
-								lat1 = lat1 * toRad;
-								lat2 = lat2 * toRad;
-
-								var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-									Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-								var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-								var d = R * c;
-
-								return d;
-							}
-							localStorage.setItem('distance_current',distance_log);
-							localStorage.setItem('distance_history',JSON.stringify(dis_array));
-							
-							makePolyline=function(arr_path){  
-							var i=arr_path.length-1;  
-							objPolylines[i] = new GGM.Polyline({ 
-								path: arr_path,
-								strokeColor: "#FF0000",
-								strokeOpacity: 1.0, 
-								strokeWeight: 5
-							});   
-							objPolylines[i].setMap(map);    
-							}  
-							
-							clearMapPolylines=function(){  
-								arr_path=[];      
-							for(i=0;i<objPolylines.length;i++){
-								objPolylines[i].setMap(null);  
-							}  
-							}
-}
-function onError(error) {
-        alert('code: '    + error.code    + '\n' +
-              'message: ' + error.message + '\n');
-    }
 
 						// ----------------------------------------------------
 
@@ -526,6 +530,7 @@ function onError(error) {
 									src = null;
 									visibleMap = null;
 									hiddenMap = null;
+									clearMapPolylines();
 
 									///////////////////////
 									best();
