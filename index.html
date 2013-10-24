@@ -70,9 +70,10 @@
 						<script type="text/javascript" charset="utf-8" src="cordova-2.5.0.js"></script>
 						<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>-->
 					
-						<table border="0" cellspacing="0" cellpadding="0" align="CENTER"  >
+						<table border="1" cellspacing="0" cellpadding="0" align="CENTER"  >
 
 							<tr>
+							
 								<td colspan="2" width="398" height="550">
 								
 									<img id="map1"/>
@@ -80,6 +81,7 @@
 								</td>
 							</tr>						
 							<tr id="tr">
+
 								<td width="25px" height="10px" align="CENTER" color="white">
 									<h1 style="font-size:20px; color:white;"> Distance</h1> <h1 id="distance" style="font-size:20px; color:white;"> 0 m</h1>
 
@@ -268,6 +270,7 @@
 								});
 
 							function update(position) {
+							if(end == 0){
 								if (latestPosition &&
 									position.coords.latitude === latestPosition.coords.latitude &&
 									position.coords.longitude === latestPosition.coords.longitude) {
@@ -277,9 +280,9 @@
 								latestPosition = position;
 								path.push(latestPosition.coords);
 
-								if(end == 0){
+								
 									Globals.cntUpdates++;
-								}
+								
 								// calculate total distance
 								if (Globals.cntUpdates > 1) {
 									Globals.latestDistance = distance(path[Globals.cntUpdates - 1], path[Globals.cntUpdates - 2]);
@@ -308,14 +311,15 @@
 							var screenSize = 400 + "x" + 500;
 
 								// setup map
-								src = "http://maps.googleapis.com/maps/api/staticmap?size=" + screenSize + "&sensor=true&path=";
+								src = "http://maps.googleapis.com/maps/api/staticmap?size=" + screenSize + "&sensor=true&path=color:0xff0000ff|weight:5";
 
 								// add path to map
-
+									
 									for (var i = 0; i < Globals.cntUpdates; i++) {
-										<!--if (i !== 0) src += "|";-->
+										if (i !== 0) src += "|";
 										src += path[i].latitude + "," + path[i].longitude;
 									}
+									
 
 								// put marker at start and end of route
 								src += "&markers=" + path[0].latitude + "," + path[0].longitude + "|" +
@@ -326,8 +330,9 @@
 
 								// load map, when loaded it will fade in
 								hiddenMap.src = src;
-
 							}
+							}
+							
 
 							// handle geolocation errors
 							function locationError() {
